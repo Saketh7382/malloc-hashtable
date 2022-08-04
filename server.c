@@ -12,9 +12,10 @@
 
 #include "memory/memory.h"
 
-#define SIZE 20
+#define SIZE 2000
 #define NAME "shared"
 
+int tablesize;
 struct DataItem {
    int data;   
    int key;
@@ -29,7 +30,7 @@ typedef struct Data {
 HashData *HashTable[SIZE]; 
 
 int hashCode(int key) {
-   return key % SIZE;
+   return key % tablesize;
 }
 
 struct Data *readdata(int key) {
@@ -162,77 +163,16 @@ struct Data *deletedata(int key) {
     }      
 }
 
-void display() {
-    int i = 0;
-    
-    for(i = 0; i<SIZE; i++) {
-        if (HashTable[i] == NULL)
-        {
-            printf("%d --> NULL\n",i);
-        }
-        else{
-            printf("%d --> ",i);
-            HashData *current = HashTable[i]->next;
-        
-            while(1)
-            {
-                printf("%d --> ",current->val);
-                if (current->next == NULL)
-                {
-                    printf("NULL\n");
-                    break;
-                }
-                else{
-                    current = current->next;
-                }
-            }
-        }
+int main(int argc, char *argv[]) {
+
+    if (argc < 3)
+    {
+        printf("Invalid number of arguments\n");
+        exit(0);
     }
-	
-    printf("\n");
-}
-
-int main() {
-
-    // printf("\n---------INSERT--------\n");
-
-    // insertdata(1,10);
-    // insertdata(2,10);
-    // insertdata(42, 420);
-    // insertdata(82, 820);
-    // insertdata(3,30);
-    // insertdata(3,60);
-
-    // printf("\n---------READ--------\n");
-
-    // HashData *retval = readdata(3);
-    // if (retval != NULL)
-    // {
-    //     printf("The value is %d\n",retval->val);
-    // }
-
-    // retval = readdata(30);
-    // if (retval != NULL)
-    // {
-    //     printf("The value is %d\n",retval->val);
-    // }
-
-    // printf("\n---------DELETE--------\n");
-
-
-    // retval = deletedata(42);
-    // if (retval != NULL)
-    // {
-    //     printf("Deleted the value %d\n",retval->val);
-    // }
-
-    // printf("\n---------READ--------\n");
-
-    // retval = readdata(42);
-    // if (retval != NULL)
-    // {
-    //     printf("The value is %d\n",retval->val);
-    // }
+    
+    int size = atoi(argv[2]);
+    tablesize = size;
 
     int fd = shm_open(NAME, O_CREAT | O_RDWR, 0666);
     if (fd < 0)
